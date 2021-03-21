@@ -1,0 +1,2 @@
+CONNECTION_STR = "Endpoint=sb://disinfomapping.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=9fKtQoDvHA+TGkbe2xcFzSb7Qg0u3CRc8rS9THGw3tc="
+QUEUE_NAME = "fetchtweets"
