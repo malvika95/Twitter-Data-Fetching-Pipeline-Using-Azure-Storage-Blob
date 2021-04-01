@@ -209,11 +209,12 @@ class TweetLoader:
             data_rows.append(tweets_map)
         return data_rows
 
-    def send_rows(self, sender, message, request_id, last_partition):
+    def send_rows(self, sender, message, request_id, last_partition, sequence_num):
         data_packet = {}
         data_packet["data"] = message
         data_packet["request_id"] = request_id
         data_packet["last_partition"] = last_partition
+        data_packet["sequence_num"] = sequence_num
         serialized_msg = ServiceBusMessage(json.dumps(data_packet))
         sender.send_messages(serialized_msg)
 
@@ -245,9 +246,11 @@ class TweetLoader:
                         try:
                             print("Sending msg packet: " + str(c+1))
                             last_partition = False if (i+self.partition_size) < len(data_rows)-1 else True
-                            self.send_rows(sender, data_rows[i:min(i + self.partition_size, len(data_rows))], request_id, last_partition)
+                            self.send_rows(sender, data_rows[i:min(i + self.partition_size, len(data_rows))], request_id, last_partition, c)
                         except Exception as e:
                             print(e)
+
+
 
     # def partition_rows(self, data_rows):
     #     request_id_dummy = "request1"
