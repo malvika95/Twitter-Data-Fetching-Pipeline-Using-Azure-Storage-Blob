@@ -8,6 +8,8 @@ import pandas as pd
 from azure.servicebus import ServiceBusClient, ServiceBusMessage
 import resources.azure_messaging_config as conf
 import random
+
+
 class TweetLoader:
     def __init__(self):
         self.start_date = None
@@ -219,8 +221,8 @@ class TweetLoader:
         sender.send_messages(serialized_msg)
 
     def partition_rows(self, data_rows):
-        #print(len(data_rows))
-        request_id = "request_" + str(random.randint(1000,9999))
+        # print(len(data_rows))
+        request_id = "request_" + str(random.randint(1000, 9999))
         print("creating partitions of size " + str(self.partition_size))
         if len(data_rows) < self.partition_size:
             try:
@@ -244,27 +246,12 @@ class TweetLoader:
                 with sender:
                     for c, i in enumerate(range(0, len(data_rows), self.partition_size)):
                         try:
-                            print("Sending msg packet: " + str(c+1))
-                            last_partition = False if (i+self.partition_size) < len(data_rows)-1 else True
-                            self.send_rows(sender, data_rows[i:min(i + self.partition_size, len(data_rows))], request_id, last_partition, c)
+                            print("Sending msg packet: " + str(c + 1))
+                            last_partition = False if (i + self.partition_size) < len(data_rows) - 1 else True
+                            self.send_rows(sender, data_rows[i:min(i + self.partition_size, len(data_rows))],
+                                           request_id, last_partition, c)
                         except Exception as e:
                             print(e)
-
-
-
-    # def partition_rows(self, data_rows):
-    #     request_id_dummy = "request1"
-    #     if (len(data_rows)<=self.partition_size):
-    #         dataset = pd.DataFrame(data_rows)
-    #         dataset.to_csv(request_id_dummy + ".csv", index=False, encoding='utf-8')
-    #     else:
-    #         for c, i in enumerate(range(0, len(data_rows), self.partition_size)):
-    #             dataset = pd.DataFrame(data_rows[i:min(i + self.partition_size, len(data_rows))])
-    #             dataset.to_csv(request_id_dummy + "_" + str(c) + ".csv", index=False, encoding='utf-8')
-
-
-
-
 
 
 if __name__ == '__main__':
