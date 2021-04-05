@@ -6,6 +6,7 @@ import resources.azure_messaging_config as conf
 import json
 from datetime import datetime
 import pandas as pd
+import time
 
 
 def read_queue():
@@ -13,14 +14,18 @@ def read_queue():
     with servicebus_client:
         # get the Queue Receiver object for the queue
         receiver = servicebus_client.get_queue_receiver(queue_name=conf.QUEUE_NAME, max_wait_time=5)
+        queue_empty = True
         with receiver:
             for c, msg in enumerate(receiver):
+                queue_empty = False
                 print("Msg "+str(c+1))
                 print("Received: " + str(msg))
                 msg_dict = json.loads(str(msg))
                 # complete the message so that the message is removed from the queue
                 upload_to_blob(msg_dict)
                 receiver.complete_message(msg)
+
+        return queue_empty
 
 def upload_to_blob(message):
     data_frame = pd.DataFrame(message["data"])
@@ -54,4 +59,9 @@ def upload_to_blob(message):
         print(ex)
 
 if __name__ == '__main__':
-    read_queue()
+    wait_time = 1
+    while True:
+        queue_empty = read_queue()
+        wait_time = 5 if queue_empty else 1
+        print("Waiting backoff: " + str(wait_time) + " seconds...")
+        time.sleep(wait_time)
