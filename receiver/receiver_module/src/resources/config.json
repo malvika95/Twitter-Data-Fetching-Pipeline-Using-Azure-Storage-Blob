@@ -1,0 +1,9 @@
+{
+                    "search_query": "#covid19, #vaccine" ,
+                    "num_results" : 500,
+                    "partition_size": 100,
+                    "start_date" : null
+
+                }
+
+
