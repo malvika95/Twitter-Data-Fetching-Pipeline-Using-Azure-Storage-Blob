@@ -11,4 +11,4 @@ RUN pip install -r requirements.txt
 
 COPY /receiver_module .
 
-CMD ["python","src/receiver.py"]
+CMD ["python","-u","src/receiver.py"]

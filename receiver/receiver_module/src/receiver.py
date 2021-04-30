@@ -10,25 +10,29 @@ import time
 
 
 def read_queue():
-    servicebus_client = ServiceBusClient.from_connection_string(conn_str=conf.CONNECTION_STR, logging_enable=True)
-    with servicebus_client:
-        # get the Queue Receiver object for the queue
-        receiver = servicebus_client.get_queue_receiver(queue_name=conf.QUEUE_NAME, max_wait_time=5)
-        queue_empty = True
-        with receiver:
-            for c, msg in enumerate(receiver):
-                queue_empty = False
-                msg_dict = json.loads(str(msg))
-                # complete the message so that the message is removed from the queue
-                upload_to_blob(msg_dict)
-                receiver.complete_message(msg)
-
+    try:
+        servicebus_client = ServiceBusClient.from_connection_string(conn_str=conf.CONNECTION_STR, logging_enable=True)
+        with servicebus_client:
+            # get the Queue Receiver object for the queue
+            receiver = servicebus_client.get_queue_receiver(queue_name=conf.QUEUE_NAME, max_wait_time=5)
+            queue_empty = True
+            with receiver:
+                for c, msg in enumerate(receiver):
+                    queue_empty = False
+                    msg_dict = json.loads(str(msg))
+                    # complete the message so that the message is removed from the queue
+                    upload_to_blob(msg_dict)
+                    receiver.complete_message(msg)
         return queue_empty
+
+    except Exception as ex:
+        print('Exception:')
+        print(ex)
 
 
 def upload_to_blob(message):
     data_frame = pd.DataFrame(message["data"])
-    local_path = "../tmp/" + message["request_id"] + "_" + str(randint(1000, 9999))
+    local_path = "tmp/" + message["request_id"] + "_" + str(randint(1000, 9999))
     blob_path = "Blob_" + datetime.today().strftime("%d_%m_%Y")
     blob_storage_path = blob_path + "/" + str(message["request_id"]) + "/fileblock_" + str(
         message["sequence_num"]) + ".csv"
@@ -50,13 +54,40 @@ def upload_to_blob(message):
         with open(local_path, "rb") as data:
             blob_client.upload_blob(data, overwrite=True)
 
-            print("Finished uploading blob"+str(message["request_id"]))
+            print("Finished uploading to blob {} partition {}".format(message["request_id"],message["sequence_num"]))
 
-        # os.remove(local_path)
+        if message["last_partition"]:
+            notif_message = {"container_name" : container_name,
+                                  "blob_name" : blob_path,
+                                  "request_id" : message["request_id"]}
+            notify_ml_model(notif_message)
+
+
+        os.remove(local_path)
 
     except Exception as ex:
         print('Exception:')
         print(ex)
+
+
+def notify_ml_model(notif_message):
+    try:
+        servicebus_client = ServiceBusClient.from_connection_string(conn_str=conf.ML_QUEUE_CONNECTION_STR,
+                                                                    logging_enable=True)
+        with servicebus_client:
+            # get a Queue Sender object to send messages to the queue
+            sender = servicebus_client.get_queue_sender(queue_name=conf.ML_QUEUE_NAME)
+            with sender:
+            # send one message
+                serialized_msg = ServiceBusMessage(json.dumps(notif_message))
+                sender.send_messages(serialized_msg)
+                print("Notified ML model request_id : {}".format((notif_message["request_id"])))
+        print("Q2 success")
+    except Exception as e:
+        print("Q2 fail")
+        print(e)
+
+
 
 
 if __name__ == '__main__':
