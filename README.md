@@ -50,21 +50,24 @@ in the background to recieve tweets for different user requests from the sender 
 ### Executing the Receiver Module  
 To execute the receiever module, navigate to the <code>/receiver/receiver_module/src/</code> folder and run the following command :  
 <code>python -u receiver.py</code>  
+
 The code will then be listening on the service bus queue for requests from the sender.
 
 ### Executing the Sender Module  
 The sender module is created as a lightweight flask application to ensure that it can be called by any application by triggering the flask endpoint and passing a hashtag of
 interest. To start the flask application, navigate to the <code>fetch_tweets\sender_module</code> folder and execute the following command:  
 <code>python -u manage.py run </code>  
+
 The flask application will be running on localhost and will specify the endpoint the flask application is running on. You can click on the endpoint or paste the same
 in your browser to view the swagger UI to trigger the sender module to fetch tweets by clicking the **try it out** button in the UI and passing your hashtag of interest.  
 The endpoint can also be triggered using an IDE such as postman by calling the endpoint as <code>http://localhost:port_number/search/</code> and passing the hashtag
-in the request body in a json format such as :
+in the request body in a json format such as :  
 <code>
 {
     "hashtag": "#YourHastagOfInterest
 }
 </code>  
+
 Once you have triggered the endpoint you shall see a "success" message as a response indicating your request has been processed successfully. You can then navigate to your
 azure blob storage account and view the data uploaded.  
 **Note - Ensure your receiver module is running background before triggering the sender module or the data will be piled up in the queue and not be uploaded to the Blob storage**  
