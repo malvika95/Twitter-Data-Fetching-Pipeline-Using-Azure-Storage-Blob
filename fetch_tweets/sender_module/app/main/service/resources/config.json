@@ -1,7 +1,8 @@
 {
-                    "num_results" : 500,
-                    "partition_size": 100,
-                    "start_date" : null
+                    "num_results" : 2000,
+                    "partition_size": 200,
+                    "start_date" : "2020-01-01",
+                    "end_date" : "2021-05-24"
 
                 }
 
