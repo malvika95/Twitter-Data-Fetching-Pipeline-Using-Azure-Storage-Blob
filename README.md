@@ -3,7 +3,7 @@
 ## Overview
 This project is a scalable data pipeline that extracts tweets for a user defined hashtag and uploads data to Azure Blob Storage in a csv format.  
 The pipeline is divided into two modules, a **sender** that extracts tweets based on a particular hashtag and a **receiever** that recieves the data and uploads it to 
-a Blob Storage. The two modules are connected through a *service bus* queue to prevent request timeouts and ensure independent scalability of the two modules. 
+a Blob Storage. The two modules are connected through a *service bus* queue to prevent request timeouts and ensure independent scalability of the two modules.  
 Project Website : https://prathameshmahankal.github.io/tracking-online-disinformation/  
 
 
