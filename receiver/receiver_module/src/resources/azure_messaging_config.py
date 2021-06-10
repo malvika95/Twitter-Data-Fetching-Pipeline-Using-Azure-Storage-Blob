@@ -1,5 +1,7 @@
-CONNECTION_STR = "Endpoint=sb://disinfomapping.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=9fKtQoDvHA+TGkbe2xcFzSb7Qg0u3CRc8rS9THGw3tc="
-QUEUE_NAME = "fetchtweets"
-AZURE_STORAGE_CONNECTION_STRING = "DefaultEndpointsProtocol=https;AccountName=hashitout;AccountKey=lTjXSZ8xbYfwd0sc24IV8sb+7+FOw8UGAmmMepvRr1/tdMz/KsFwQqG0WETukJFLXspo8cQC/OTxD0Rt+RR0Qg==;EndpointSuffix=core.windows.net"
-ML_QUEUE_CONNECTION_STR = "Endpoint=sb://ml-modelling-namespace.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=sM1htz91f/UTWH7C8nECYFyvbDKlDqAD9B7KmulH3eE="
-ML_QUEUE_NAME = "tweets-to-classify"
+CONNECTION_STR = "your_queue_connection_string"
+QUEUE_NAME = "your_queue_name"
+AZURE_STORAGE_CONNECTION_STRING = "your_blob_connection_string"
+
+#Connects to the Machine Learning module that is a part of another pipeline . This can be deleted as it is not needed for running the datafetching pipeline
+ML_QUEUE_CONNECTION_STR = 
+ML_QUEUE_NAME = 

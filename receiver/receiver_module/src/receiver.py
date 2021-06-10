@@ -37,7 +37,7 @@ def upload_to_blob(message):
     blob_storage_path = blob_path + "/" + str(message["request_id"]) + "/fileblock_" + str(
         message["sequence_num"]) + ".csv"
     data_frame.to_csv(local_path, index=False, encoding="utf-8")
-    # Blob upload logic should stay here not another func:
+    
     try:
         connect_str = conf.AZURE_STORAGE_CONNECTION_STRING
         blob_service_client = BlobServiceClient.from_connection_string(connect_str)
@@ -52,8 +52,8 @@ def upload_to_blob(message):
         blob_client = blob_service_client.get_blob_client(container=container_name, blob=blob_storage_path)
 
         with open(local_path, "rb") as data:
+            
             blob_client.upload_blob(data, overwrite=True)
-
             print("Finished uploading to blob {} partition {}".format(message["request_id"],message["sequence_num"]))
 
         if message["last_partition"]:
@@ -70,6 +70,7 @@ def upload_to_blob(message):
         print(ex)
 
 
+#This method notifies an ML model when blob is uploaded that is a part of another pipeline. this method can be removed to execute only the data fetching pipeline
 def notify_ml_model(notif_message):
     try:
         servicebus_client = ServiceBusClient.from_connection_string(conn_str=conf.ML_QUEUE_CONNECTION_STR,
@@ -82,9 +83,7 @@ def notify_ml_model(notif_message):
                 serialized_msg = ServiceBusMessage(json.dumps(notif_message))
                 sender.send_messages(serialized_msg)
                 print("Notified ML model request_id : {}".format((notif_message["request_id"])))
-        print("Q2 success")
     except Exception as e:
-        print("Q2 fail")
         print(e)
 
 
