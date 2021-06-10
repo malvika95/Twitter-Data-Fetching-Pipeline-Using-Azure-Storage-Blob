@@ -36,6 +36,7 @@ def upload_to_blob(message):
     blob_path = "Blob_" + datetime.today().strftime("%d_%m_%Y")
     blob_storage_path = blob_path + "/" + str(message["request_id"]) + "/fileblock_" + str(
         message["sequence_num"]) + ".csv"
+    data_frame.to_csv(local_path, index=False, encoding="utf-8")
     
     try:
         connect_str = conf.AZURE_STORAGE_CONNECTION_STRING
@@ -54,8 +55,6 @@ def upload_to_blob(message):
             
             blob_client.upload_blob(data, overwrite=True)
             print("Finished uploading to blob {} partition {}".format(message["request_id"],message["sequence_num"]))
-
-        blob_client.upload_blob(str(data_frame.to_csv(local_path, index=False, encoding="utf-8")), overwrite=True)
 
         if message["last_partition"]:
             notif_message = {"container_name" : container_name,
