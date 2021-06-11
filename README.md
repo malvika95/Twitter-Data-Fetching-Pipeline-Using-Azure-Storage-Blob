@@ -64,7 +64,7 @@ The endpoint can also be triggered using an IDE such as postman by calling the e
 in the request body in a json format such as :  
 <code>
 {
-    "hashtag": "#YourHastagOfInterest
+    "hashtag": "#YourHastagOfInterest"
 }
 </code>  
 
