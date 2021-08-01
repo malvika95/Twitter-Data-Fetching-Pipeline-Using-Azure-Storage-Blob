@@ -78,7 +78,7 @@ Both the sender and receiver modules can be deployed as images on Docker that ca
 and for the receiever module under <code>receiver/Dockerfile</code> and run the [docker build](https://docs.docker.com/engine/reference/commandline/build/) command on your local docker system.
 
 Once you have built your docker image locally, you can push your local docker image into **Azure container instances**. This can be done by following steps given in this video -
-<code>https://www.youtube.com/watch?v=cW34LTeogAg&t=5s<code> .
+<code>https://www.youtube.com/watch?v=cW34LTeogAg&t=5s<code>
 
 
 
