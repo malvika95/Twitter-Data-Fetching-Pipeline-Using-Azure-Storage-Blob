@@ -34,7 +34,6 @@ class TweetLoader:
             self.start_date = config_dict.get("start_date", None)
             self.end_date = config_dict.get("end_date", None)
             self.num_results = config_dict.get("num_results")
-            #self.search_query = config_dict.get("search_query")
             self.partition_size = config_dict.get("partition_size", 1000)
             self.search_query = search_query
         if self.start_date:
@@ -54,10 +53,6 @@ class TweetLoader:
             if self.start_date > current_date:
                 print("Start date cannot be greater than current date")
                 validity_check = False
-
-        # if not self.search_query:
-        #     print("Please enter search query to fetch data")
-        #     validity_check = False
 
         if not self.num_results:
             self.num_results = 10
@@ -115,7 +110,7 @@ class TweetLoader:
 
                 # fill out these fields
                 "user.fields": "created_at,description,entities,id,location,name,protected,public_metrics,url,username,verified,withheld",
-                "tweet.fields": "attachments,author_id,context_annotations,conversation_id,created_at,entities,geo,id,in_reply_to_user_id,lang,public_metrics,possibly_sensitive,referenced_tweets,source,text,withheld",
+                "tweet.fields": "attachments,author_id,conversation_id,created_at,entities,geo,id,in_reply_to_user_id,lang,public_metrics,possibly_sensitive,referenced_tweets,source,text,withheld",
                 "place.fields": "contained_within,country,country_code,full_name,geo,id,name,place_type",
 
                 # how to paginate!
@@ -229,9 +224,7 @@ class TweetLoader:
         sender.send_messages(serialized_msg)
 
     def partition_rows(self, data_rows):
-        # print(len(data_rows))
         request_id = self.request_id
-        # request_id = "request_" + str(random.randint(1000, 9999))
         print("creating partitions of size " + str(self.partition_size))
         if len(data_rows) < self.partition_size:
             try:
