@@ -75,7 +75,10 @@ azure blob storage account and view the data uploaded.
 
 ## Deployment with Docker  
 Both the sender and receiver modules can be deployed as images on Docker that can be subsequently pushed on **Azure Container Instance** to run on the Cloud. To build the docker image of the two modules, navigate to the docker file path for each of the modules (the docker file for the sender module can be found under <code>fetch_tweets/Dockerfile</code>
-and for the receiever module under <code>receiver/Dockerfile</code> and run the [docker build](https://docs.docker.com/engine/reference/commandline/build/) command.
+and for the receiever module under <code>receiver/Dockerfile</code> and run the [docker build](https://docs.docker.com/engine/reference/commandline/build/) command on your local docker system.
+
+Once you have built your docker image locally, you can push your local docker image into **Azure container instances**. This can be done by following steps given in this video -
+<code>https://www.youtube.com/watch?v=cW34LTeogAg&t=5s<code> .
 
 
 
